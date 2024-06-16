@@ -3,7 +3,7 @@ clc;
 close all; 
 addpath(genpath(pwd));  
 runNumber=30;                 % Run times
-D=10;                         % Dimension
+D=10;                         % Dimension  (10  30  50)
 NP=100;                       % Population size
 F=0.5;                        % Mutation operator
 CR=0.9;                       % Crossover operator
