@@ -1,5 +1,5 @@
-# LensOBLDE
-This is an academic paper published in Applied soft computing. You can retrieve it via the following link:https://doi.org/10.1016/j.asoc.2023.111211.
+# Lens imaging opposition-based learning for differential evolution with cauchy perturbation (LensOBLDE)
+# This is an academic paper published in Applied soft computing. You can retrieve it via the following link:https://doi.org/10.1016/j.asoc.2023.111211.
 
 The following is some important information about it:
 "Title": Lens imaging opposition-based learning for differential evolution with cauchy perturbation
