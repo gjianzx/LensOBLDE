@@ -29,12 +29,12 @@ for k=1:30
     fprintf("\n------------------------\n");
     fprintf("Start testing the F%d function\n",k);
     fprintf("------------------------\n");
-s=zeros(7,runNumber);
+s=zeros(1,runNumber);
 for i=1:runNumber
 
     [Pb,xg_trace]=LensOBLDE(func_num,fhd,D,NP,F,CR,gen_max,border,func_num);
     LensOBLDEMatrix(:,i)=xg_trace(:,2);
-    s(7,i)=Pb;
+    s(1,i)=Pb;
 end
 
 xg_trace=zeros(gen_max,2);  
@@ -45,8 +45,8 @@ for i=1:gen_max
     end
     xg_trace(i,2)= xg_trace(i,2)/runNumber;   
 end
-d=7;
+
 fprintf("\nLensOBLDE:\nBest为:%d\nWorst为:%d\nMedian为:%d\nMean为:%d\nStd为:%d\n",...
-        min(s(d,:)),max(s(d,:)),median(s(d,:)),mean(s(d,:)),std(s(d,:)));
+        min(s(1,:)),max(s(1,:)),median(s(1,:)),mean(s(1,:)),std(s(1,:)));
     
 end
