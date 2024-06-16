@@ -58,7 +58,7 @@ for count = 2 : gen_max
             if pop_rank(i) <= 10
                 for ii=1:NP            
                     if (cost(ii) == pop_value(pop_rank(i))) 
-                        x(ii,:)=x(ii,:)*(0.1+0.1*tan((rand()-0.5)*pi));
+                        x(ii,:)=x(ii,:)*(0.1+0.1*tan((rand()-0.5)*pi));   % Cauchy perturbation strategy %
                     end            
                 end
             end
