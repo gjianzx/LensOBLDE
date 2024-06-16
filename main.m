@@ -21,7 +21,7 @@ fbias=[100,200,300,400,500,600,700,...
 
 LensOBLDEMatrix=zeros(gen_max,runNumber);
 
-for k=16:19 %21
+for k=1:30 
     func_num=k;
     if k==2 
         continue;
