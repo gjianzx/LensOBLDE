@@ -11,4 +11,4 @@ The following is the main information of the code：
 "main.m": It is the execution of the algorithm.
 "LensOBLDE": It is the main implementation code of the algorithm.
 
-Attention! The CEC2017 packet needs to be imported before this code can be executed, which can be found in other projects.
+Attention! The CEC2017 packet needs to be imported before this code can be executed, which can be found in other repositories.
