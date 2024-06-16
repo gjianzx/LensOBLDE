@@ -44,10 +44,11 @@ old_FEs = new_FEs;
 
 trace(1,1)=1;
 trace(1,2)=Pb;
+
 % Main loop %
 for count = 2 : gen_max
     
-    if fitFEs_count > Max_FES
+    if fitFEs_count > Max_FES     
         break;
     end
     
