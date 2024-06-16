@@ -1,479 +1,53 @@
-%ÓÃÍ¾£º½»»¥Ê½²î·ÖÑÝ»¯Ê¹ÓÃ·´ÏòÑ§Ï°²ßÂÔµÄ³ÌÐò
-% function main
-% clear;
-% clc;
-% close all; 
-% addpath(genpath(pwd));  %´ò¿ªÒ»¸ö²»ÔÚmatlab¹¤×÷Â·¾¶ÉÏµÄÎÄ¼þ
-% runNumber=30; %ÔËÐÐ´ÎÊý
-% D=10;         %Î¬Êý
-% NP=100;       %NPÎªÖÖÈº¹æÄ£
-% F=0.5;        %Í»±äÒò×Ó
-% Fmax=0.9;
-% Fmin=0.1;
-% CR=0.9;       %½»²æ¸ÅÂÊ
-% Max_FES = 10000 * D; % ×î´óº¯ÊýÆÀ¹ÀÊý
-% gen_max = Max_FES/NP;  % ×î´óµü´úÊý 
-% border=100;     %ÉÏÏÂ½ç¾ø¶ÔÖµ£¨Ò»°ãÎª¶Ô³ÆËÑË÷¿Õ¼ä£©
-% % func_num=3;        %²âÊÔº¯ÊýÑ¡Ôñ
-% fhd=str2func('cec17_func');
-% 
-% global fbias
-% %×îÓÅÖµÆ«ÒÆÁ¿%
-% fbias=[100,200,300,400,500,600,700,...
-%        800,900,1000,1100,1200,1300,...
-%        1400,1500,1600,1700,1800,1900,...
-%        2000,2100,2200,2300,2400,2500,...
-%        2600,2700,2800,2900,3000];
-% DODEMatrix=zeros(runNumber,Max_FES);
-% OMLDEMatrix=zeros(runNumber,Max_FES);
-% OBAMatrix=zeros(runNumber,Max_FES);
-% NBOLDEMatrix=zeros(runNumber,Max_FES);
-% GPODEMatrix=zeros(runNumber,Max_FES);
-% JaDEMatrix=zeros(runNumber,Max_FES);
-% ACDE_FMatrix=zeros(runNumber,Max_FES);
-% Algs_FES = zeros(7,Max_FES);
-% 
-% DEMatrix=zeros(gen_max,runNumber);
-% GODEMatrix=zeros(gen_max,runNumber);
-% OBLDEMatrix=zeros(gen_max,runNumber);
-% CODEMatrix=zeros(gen_max,runNumber);
-% DODEMatrix=zeros(gen_max,runNumber);
-% OMLDEMatrix=zeros(gen_max,runNumber);
-% LensOBLDEMatrix=zeros(gen_max,runNumber);
-% 
-% for k=21:30 
-%     func_num=k;
-%     if k==2
-%         continue;
-%     end
-%     fprintf("\n------------------------\n");
-%     fprintf("¿ªÊ¼µ÷ÓÃF%dº¯Êý\n",k);
-%     fprintf("------------------------\n");
-% s=zeros(7,runNumber);
-% for i=1:runNumber
-%     [Pb,~,FEs_fitness]=DE(func_num,fhd,D,NP,F,CR,gen_max,Max_FES,border,func_num);
-%     OMLDEMatrix(i,:)=FEs_fitness;
-%     DEMatrix(:,i)=trace(:,2);
-%     s(1,i)=Pb;
-%     
-%     [Pb,trace]=GODE(func_num,fhd,D,NP,F,CR,gen_max,border,func_num);
-%     GODEMatrix(:,i)=trace(:,2);
-%     s(2,i)=Pb;
-%     
-%     [Pb,trace]=CODE(func_num,fhd,D,NP,F,CR,gen_max,border,func_num);
-%     CODEMatrix(:,i)=trace(:,2);
-%     s(3,i)=Pb;
-%     
-%     [Pb,trace]=OBLDE(func_num,fhd,D,NP,F,CR,gen_max,border,func_num);
-%     OBLDEMatrix(:,i)=trace(:,2);
-%     s(4,i)=Pb;
-%     
-%     [Pb,trace]=DODE(func_num,fhd,D,NP,F,CR,gen_max,border,func_num);
-%     DODEMatrix(:,i)=trace(:,2);
-%     s(5,i)=Pb;
-%     
-%     [Pb,trace]=OMLDE(func_num,fhd,D,NP,F,CR,gen_max,border,func_num);
-%     OMLDEMatrix(:,i)=trace(:,2);
-%     s(6,i)=Pb;
-%     
-%     [Pb,trace]=LensOBLDE(func_num,fhd,D,NP,F,CR,gen_max,border,func_num);
-%     LensOBLDEMatrix(:,i)=trace(:,2);
-%     s(7,i)=Pb;
-% 
-% end
-% trace=zeros(gen_max,8);  %ÓÃÓÚ´æ·Å¸÷¸öËã·¨µÄÃ¿´Îµü´úµÄ×îÓÅÖµ
-% 
-% for i=1:gen_max
-%     trace(i,1)=i;        %´æ·Åµü´ú´ÎÊý
-%     for j=1:runNumber
-%        trace(i,2)=trace(i,2)+DEMatrix(i,j);
-%        trace(i,3)=trace(i,3)+GODEMatrix(i,j);
-%        trace(i,4)=trace(i,4)+CODEMatrix(i,j);
-%        trace(i,5)=trace(i,5)+OBLDEMatrix(i,j);
-%        trace(i,6)=trace(i,6)+DODEMatrix(i,j);
-%        trace(i,7)=trace(i,7)+OMLDEMatrix(i,j);
-%        trace(i,8)=trace(i,8)+LensOBLDEMatrix(i,j);       
-%     end
-%     trace(i,2:8)= trace(i,2:8)/runNumber;   %Çó½âÔËÐÐ50´ÎµÄÆ½¾ùÊÊÓ¦Öµ    
-% end
-% 
-% fprintf("DE:\nBestÎª:%d\nWorstÎª:%d\nMedianÎª:%d\nMeanÎª:%d\nStdÎª:%d\n",min(s(1,:)),max(s(1,:)),median(s(1,:)),mean(s(1,:)),std(s(1,:)));
-% fprintf("\nGODE:\nBestÎª:%d\nWorstÎª:%d\nMedianÎª:%d\nMeanÎª:%d\nStdÎª:%d\n",min(s(2,:)),max(s(2,:)),median(s(2,:)),mean(s(2,:)),std(s(2,:)));
-% fprintf("\nCODE:\nBestÎª:%d\nWorstÎª:%d\nMedianÎª:%d\nMeanÎª:%d\nStdÎª:%d\n",min(s(3,:)),max(s(3,:)),median(s(3,:)),mean(s(3,:)),std(s(3,:)));
-% fprintf("\nOBLDE:\nBestÎª:%d\nWorstÎª:%d\nMedianÎª:%d\nMeanÎª:%d\nStdÎª:%d\n",min(s(4,:)),max(s(4,:)),median(s(4,:)),mean(s(4,:)),std(s(4,:)));
-% fprintf("\nDODE:\nBestÎª:%d\nWorstÎª:%d\nMedianÎª:%d\nMeanÎª:%d\nStdÎª:%d\n",min(s(5,:)),max(s(5,:)),median(s(5,:)),mean(s(5,:)),std(s(5,:)));
-% fprintf("\nOMLDE:\nBestÎª:%d\nWorstÎª:%d\nMedianÎª:%d\nMeanÎª:%d\nStdÎª:%d\n",min(s(6,:)),max(s(6,:)),median(s(6,:)),mean(s(6,:)),std(s(6,:)));
-% fprintf("\nLensOBLDE:\nBestÎª:%d\nWorstÎª:%d\nMedianÎª:%d\nMeanÎª:%d\nStdÎª:%d\n",min(s(7,:)),max(s(7,:)),median(s(7,:)),mean(s(7,:)),std(s(7,:)));
-% 
-% %%% ±£´æexcelÊý¾Ý %%%
-% save_data(k,func_num,s,D);   
-% %%% ±£´æmatÎÄ¼þ %%%
-% if D==10
-%     path='E:\MATLAB\project\DE\save_data\10\';
-% elseif D==30
-%     path='E:\MATLAB\project\DE\save_data\30\';
-% elseif D==50
-%     path='E:\MATLAB\project\DE\save_data\50\';
-% end
-% filename=strcat('DE','_',int2str(D),'_',int2str(k),'.mat');
-% save([path,filename],'trace');
-% 
-% %%% »­Í¼²¢±£´æ %%%
-% figure(k);
-% plot(trace(:,1),trace(:,2),'k-o',...   %DEºÚÉ«Ô²È¦
-%      trace(:,1),trace(:,3),'y-h',...   %GODE»ÆÉ«Áù½ÇÐÎ
-%      trace(:,1),trace(:,4),'r-v',...   %CODEºìÉ«ÏÂÈý½Ç
-%      trace(:,1),trace(:,5),'m-s',...   %OBLDEÆ·ºì·½ÐÎ
-%      trace(:,1),trace(:,6),'c-^',...   %DODEÇàÀ¶ÉÏÈý½Ç
-%      trace(:,1),trace(:,7),'g-p',...   %OMLDEÂÌÉ«Îå½ÇÐÎ
-%      trace(:,1),trace(:,8),'b-D',...   %LensOBLDEÀ¶É«ÁâÐÎ
-%      'MarkerIndices',1:round(gen_max/10):gen_max,'LineWidth',1);
-% legend('DE','GODE','CODE','OBLDE','DODE','OMLDE','LensOBLDE','Location','Best');
-% set(gca,'Xtick',0:round(gen_max/5):gen_max);
-% xlabel('Function Evaluations');
-% ylabel('Average Function Values');
-% 
-% if D==10
-%     path='E:\MATLAB\project\DE\ÊµÑé½ØÍ¼\10Î¬\';
-% elseif D==30
-%     path='E:\MATLAB\project\DE\ÊµÑé½ØÍ¼\30Î¬\';
-% elseif D==50
-%     path='E:\MATLAB\project\DE\ÊµÑé½ØÍ¼\50Î¬\';
-% end
-% saveas(gcf,[path,'F',num2str(k),'.png']); 
-% end
-% 
-% end
-
-%% ²âÊÔOMLDE,SPODE,ACDE_F
 clear;
 clc;
 close all; 
-addpath(genpath(pwd));  %´ò¿ªÒ»¸ö²»ÔÚmatlab¹¤×÷Â·¾¶ÉÏµÄÎÄ¼þ
-runNumber=10; %ÔËÐÐ´ÎÊý
-D=50;         %Î¬Êý
-NP=100;       %NPÎªÖÖÈº¹æÄ£
-F=0.5;        %Í»±äÒò×Ó
-CR=0.9;       %½»²æ¸ÅÂÊ
-Max_FES = 10000 * D; % ×î´óº¯ÊýÆÀ¹ÀÊý
-gen_max = Max_FES/NP;  % ×î´óµü´úÊý 
-border=100;     %ÉÏÏÂ½ç¾ø¶ÔÖµ£¨Ò»°ãÎª¶Ô³ÆËÑË÷¿Õ¼ä£©
+addpath(genpath(pwd));  
+runNumber=30; %è¿è¡Œæ¬¡æ•°
+D=10;         %ç»´æ•°
+NP=100;       %NPä¸ºç§ç¾¤è§„æ¨¡
+F=0.5;        %çªå˜å› å­
+CR=0.9;       %äº¤å‰æ¦‚çŽ‡
+gen_max=5000;%10000*D;  %æœ€å¤§è¿›åŒ–ä»£æ•° 
+border=100;     %ä¸Šä¸‹ç•Œç»å¯¹å€¼ï¼ˆä¸€èˆ¬ä¸ºå¯¹ç§°æœç´¢ç©ºé—´ï¼‰
+% func_num=3;        %æµ‹è¯•å‡½æ•°é€‰æ‹©
 fhd=str2func('cec17_func');
-str="OAS";
 
 global fbias
-%×îÓÅÖµÆ«ÒÆÁ¿%
+%æœ€ä¼˜å€¼åç§»é‡%
 fbias=[100,200,300,400,500,600,700,...
        800,900,1000,1100,1200,1300,...
        1400,1500,1600,1700,1800,1900,...
        2000,2100,2200,2300,2400,2500,...
        2600,2700,2800,2900,3000];
-   
-OMLDEMatrix=zeros(runNumber,Max_FES);
-SPODEMatrix=zeros(runNumber,Max_FES);
-ACDE_FMatrix=zeros(runNumber,Max_FES);
 
-OAS_FES = zeros(5,Max_FES);
-s=zeros(3,runNumber);
-for k=25:30
+LensOBLDEMatrix=zeros(gen_max,runNumber);
+
+for k=16:19 %21
     func_num=k;
-    if k==2
+    if k==2 
         continue;
     end
-    fprintf("\n----------------------------------\n");
-    fprintf("¿ªÊ¼²âÊÔ¶Ô±ÈËã·¨µÄ%dÎ¬-F%dº¯Êý >>>>\n",D,k);
-    fprintf("----------------------------------\n");
+    fprintf("\n------------------------\n");
+    fprintf("å¼€å§‹è°ƒç”¨F%då‡½æ•°\n",k);
+    fprintf("------------------------\n");
+s=zeros(7,runNumber);
 for i=1:runNumber
-    fprintf("-----µÚ%d´ÎÔËÐÐ-----\n",i);
-    fprintf("OMLDE--->");
-    [Pb,~,FEs_fitness]=OMLDE(func_num,fhd,D,NP,F,CR,gen_max,Max_FES,border,func_num);
-    OMLDEMatrix(i,:)=FEs_fitness;
-    s(1,i)=Pb;
-    
-    fprintf("ACDE_F--->");       
-    [Pb,~,FEs_fitness]=ACDE_F(func_num,fhd,D,NP,gen_max,Max_FES,border,func_num);
-    ACDE_FMatrix(i,:)=FEs_fitness;
-    s(2,i)=Pb;
-    
-    fprintf("SPODE\n");       
-    [Pb,~,FEs_fitness]=SPODE(func_num,fhd,D,NP,F,CR,gen_max,Max_FES,border,func_num);
-    SPODEMatrix(i,:)=FEs_fitness;
-    s(3,i)=Pb;
-end
-OAS_FES(1,:)= mean(OMLDEMatrix,1);
-OAS_FES(2,:)= mean(ACDE_FMatrix,1);
-OAS_FES(3,:)= mean(SPODEMatrix,1);
 
-if D==10
-    path='E:\MATLAB\project\LensOBLDE\Datas\10D\';
-elseif D==30
-    path='E:\MATLAB\project\LensOBLDE\Datas\30D\';
-elseif D==50
-    path='E:\MATLAB\project\LensOBLDE\Datas\50D\';
-end
-filename=strcat('OAS','_',int2str(D),'D_F',int2str(k),'.mat');
-save([path,filename],'OAS_FES');
-
-fprintf("\nOMLDE:\nBestÎª:%d\nWorstÎª:%d\nMedianÎª:%d\nMeanÎª:%d\nStdÎª:%d\n",min(s(1,:)),max(s(1,:)),median(s(1,:)),mean(s(1,:)),std(s(1,:)));
-fprintf("\nACDE_F:\nBestÎª:%d\nWorstÎª:%d\nMedianÎª:%d\nMeanÎª:%d\nStdÎª:%d\n",min(s(2,:)),max(s(2,:)),median(s(2,:)),mean(s(2,:)),std(s(2,:)));
-fprintf("\nSPODE:\nBestÎª:%d\nWorstÎª:%d\nMedianÎª:%d\nMeanÎª:%d\nStdÎª:%d\n",min(s(3,:)),max(s(3,:)),median(s(3,:)),mean(s(3,:)),std(s(3,:)));
-
-%%% ±£´æexcelÊý¾Ý %%%
- save_data(k,D,s,str);   
-
+    [Pb,xg_trace]=LensOBLDE(func_num,fhd,D,NP,F,CR,gen_max,border,func_num);
+    LensOBLDEMatrix(:,i)=xg_trace(:,2);
+    s(7,i)=Pb;
 end
 
-%% µ¥¶À²âÊÔOMLDE
-clear;
-clc;
-close all; 
-addpath(genpath(pwd));  %´ò¿ªÒ»¸ö²»ÔÚmatlab¹¤×÷Â·¾¶ÉÏµÄÎÄ¼þ
-runNumber=10; %ÔËÐÐ´ÎÊý
-D=50;         %Î¬Êý
-NP=100;       %NPÎªÖÖÈº¹æÄ£
-F=0.5;        %Í»±äÒò×Ó
-CR=0.9;       %½»²æ¸ÅÂÊ
-Max_FES = 10000 * D; % ×î´óº¯ÊýÆÀ¹ÀÊý
-gen_max = Max_FES/NP;  % ×î´óµü´úÊý 
-border=100;     %ÉÏÏÂ½ç¾ø¶ÔÖµ£¨Ò»°ãÎª¶Ô³ÆËÑË÷¿Õ¼ä£©
-fhd=str2func('cec17_func');
-str = "OMLDE";  % ÓÃÓÚ±£´æ¶Ô±ÈËã·¨±êÖ¾µÄ×Ö·û´®
-
-global fbias
-%×îÓÅÖµÆ«ÒÆÁ¿%
-fbias=[100,200,300,400,500,600,700,...
-       800,900,1000,1100,1200,1300,...
-       1400,1500,1600,1700,1800,1900,...
-       2000,2100,2200,2300,2400,2500,...
-       2600,2700,2800,2900,3000];
-   
-OMLDEMatrix=zeros(runNumber,Max_FES);
-
-Local_Algs_FES = zeros(1,Max_FES);
-s=zeros(1,runNumber);
-for k=27:27
-    func_num=k;
-    if k==2
-       continue;
+xg_trace=zeros(gen_max,2);  
+for i=1:gen_max
+    xg_trace(i,1)=i;        
+    for j=1:runNumber
+       xg_trace(i,2)=xg_trace(i,2)+LensOBLDEMatrix(i,j);       
     end
-    fprintf("\n----------------------------------\n");
-    fprintf("¿ªÊ¼²âÊÔ%sµÄ%dÎ¬-F%dº¯Êý >>>>\n",str,D,k);
-    fprintf("----------------------------------\n");
+    xg_trace(i,2)= xg_trace(i,2)/runNumber;   
+end
+d=7;
+fprintf("\nLensOBLDE:\nBestä¸º:%d\nWorstä¸º:%d\nMedianä¸º:%d\nMeanä¸º:%d\nStdä¸º:%d\n",...
+        min(s(d,:)),max(s(d,:)),median(s(d,:)),mean(s(d,:)),std(s(d,:)));
     
-for i=1:runNumber
-    fprintf("-----%sµÚ%d´ÎÔËÐÐ-----\n",str,i);
-    [Pb,~,FEs_fitness]=OMLDE(func_num,fhd,D,NP,F,CR,gen_max,Max_FES,border,func_num);
-    OMLDEMatrix(i,:)=FEs_fitness;
-    s(1,i)=Pb;
-     
-end
-Local_Algs_FES(1,:)= mean(OMLDEMatrix,1);
-
-if D==10
-    path='E:\MATLAB\project\LensOBLDE\Datas\10D\';
-elseif D==30
-    path='E:\MATLAB\project\LensOBLDE\Datas\30D\';
-elseif D==50
-    path='E:\MATLAB\project\LensOBLDE\Datas\50D\';
-end
-filename=strcat('OAS','_',int2str(D),'D_F',int2str(k),'.mat');
-load([path,filename]);
-OAS_FES(1,:)=Local_Algs_FES(1,:);
-save([path,filename],'OAS_FES');
-
-fprintf("\nOMLDE:\nBestÎª:%d\nWorstÎª:%d\nMedianÎª:%d\nMeanÎª:%d\nStdÎª:%d\n",min(s(1,:)),max(s(1,:)),median(s(1,:)),mean(s(1,:)),std(s(1,:)));
-
-%±£´æOMLDEµÄBest,Worst,Median,Mean,Stdµ½excel
-%  save_data(k,D,s,str); 
-end
-
-%% µ¥¶À²âÊÔACDE_F
-clear;
-clc;
-close all; 
-addpath(genpath(pwd));  %´ò¿ªÒ»¸ö²»ÔÚmatlab¹¤×÷Â·¾¶ÉÏµÄÎÄ¼þ
-runNumber=10; %ÔËÐÐ´ÎÊý
-D=10;         %Î¬Êý
-NP=100;       %NPÎªÖÖÈº¹æÄ£
-F=0.5;        %Í»±äÒò×Ó
-CR=0.9;       %½»²æ¸ÅÂÊ
-Max_FES = 10000 * D; % ×î´óº¯ÊýÆÀ¹ÀÊý
-gen_max = Max_FES/NP;  % ×î´óµü´úÊý 
-border=100;     %ÉÏÏÂ½ç¾ø¶ÔÖµ£¨Ò»°ãÎª¶Ô³ÆËÑË÷¿Õ¼ä£©
-fhd=str2func('cec17_func');
-str = "ACDE_F";  % ÓÃÓÚ±£´æ¶Ô±ÈËã·¨±êÖ¾µÄ×Ö·û´®
-
-global fbias
-%×îÓÅÖµÆ«ÒÆÁ¿%
-fbias=[100,200,300,400,500,600,700,...
-       800,900,1000,1100,1200,1300,...
-       1400,1500,1600,1700,1800,1900,...
-       2000,2100,2200,2300,2400,2500,...
-       2600,2700,2800,2900,3000];
-   
-ACDE_FMatrix=zeros(runNumber,Max_FES);
-
-Local_Algs_FES = zeros(1,Max_FES);
-s=zeros(1,runNumber);
-for k=30:30
-    func_num=k;
-    if k==2
-       continue;
-    end
-    fprintf("\n----------------------------------\n");
-    fprintf("¿ªÊ¼²âÊÔ%sµÄ%dÎ¬-F%dº¯Êý >>>>\n",str,D,k);
-    fprintf("----------------------------------\n");
-    
-for i=1:runNumber
-    fprintf("-----%sµÚ%d´ÎÔËÐÐ-----\n",str,i);
-    [Pb,~,FEs_fitness]=ACDE_F(func_num,fhd,D,NP,gen_max,Max_FES,border,func_num);
-    ACDE_FMatrix(i,:)=FEs_fitness;
-    s(1,i)=Pb;
-     
-end
-Local_Algs_FES(1,:)= mean(ACDE_FMatrix,1);
-
-if D==10
-    path='E:\MATLAB\project\LensOBLDE\Datas\10D\';
-elseif D==30
-    path='E:\MATLAB\project\LensOBLDE\Datas\30D\';
-elseif D==50
-    path='E:\MATLAB\project\LensOBLDE\Datas\50D\';
-end
-filename=strcat('OAS','_',int2str(D),'D_F',int2str(k),'.mat');
-load([path,filename]);
-OAS_FES(2,:)=Local_Algs_FES(1,:);
-save([path,filename],'OAS_FES');
-
-fprintf("\nACDE_F:\nBestÎª:%d\nWorstÎª:%d\nMedianÎª:%d\nMeanÎª:%d\nStdÎª:%d\n",min(s(1,:)),max(s(1,:)),median(s(1,:)),mean(s(1,:)),std(s(1,:)));
-
-%±£´æOMLDEµÄBest,Worst,Median,Mean,Stdµ½excel
-%  save_data(k,D,s,str); 
-end
-
-%% µ¥¶À²âÊÔSPODE
-clear;
-clc;
-close all; 
-addpath(genpath(pwd));  %´ò¿ªÒ»¸ö²»ÔÚmatlab¹¤×÷Â·¾¶ÉÏµÄÎÄ¼þ
-runNumber=10; %ÔËÐÐ´ÎÊý
-D=50;         %Î¬Êý
-NP=100;       %NPÎªÖÖÈº¹æÄ£
-F=0.5;        %Í»±äÒò×Ó
-CR=0.9;       %½»²æ¸ÅÂÊ
-Max_FES = 10000 * D; % ×î´óº¯ÊýÆÀ¹ÀÊý
-gen_max = Max_FES/NP;  % ×î´óµü´úÊý 
-border=100;     %ÉÏÏÂ½ç¾ø¶ÔÖµ£¨Ò»°ãÎª¶Ô³ÆËÑË÷¿Õ¼ä£©
-fhd=str2func('cec17_func');
-str = "SPODE";  % ÓÃÓÚ±£´æ¶Ô±ÈËã·¨±êÖ¾µÄ×Ö·û´®
-
-global fbias
-%×îÓÅÖµÆ«ÒÆÁ¿%
-fbias=[100,200,300,400,500,600,700,...
-       800,900,1000,1100,1200,1300,...
-       1400,1500,1600,1700,1800,1900,...
-       2000,2100,2200,2300,2400,2500,...
-       2600,2700,2800,2900,3000];
-   
-SPODEMatrix=zeros(runNumber,Max_FES);
-
-Local_Algs_FES = zeros(1,Max_FES);
-s=zeros(1,runNumber);
-for k=20:20
-    func_num=k;
-    if k==2
-       continue;
-    end
-    fprintf("\n----------------------------------\n");
-    fprintf("¿ªÊ¼²âÊÔ%sµÄ%dÎ¬-F%dº¯Êý >>>>\n",str,D,k);
-    fprintf("----------------------------------\n");
-    
-for i=1:runNumber
-    fprintf("-----%sµÚ%d´ÎÔËÐÐ-----\n",str,i);
-    [Pb,~,FEs_fitness]=SPODE(func_num,fhd,D,NP,F,CR,gen_max,Max_FES,border,func_num);
-    SPODEMatrix(i,:)=FEs_fitness;
-    s(1,i)=Pb;
-     
-end
-Local_Algs_FES(1,:)= mean(SPODEMatrix,1);
-
-if D==10
-    path='E:\MATLAB\project\LensOBLDE\Datas\10D\';
-elseif D==30
-    path='E:\MATLAB\project\LensOBLDE\Datas\30D\';
-elseif D==50
-    path='E:\MATLAB\project\LensOBLDE\Datas\50D\';
-end
-filename=strcat('OAS','_',int2str(D),'D_F',int2str(k),'.mat');
-load([path,filename]);
-OAS_FES(3,:)=Local_Algs_FES(1,:);
-save([path,filename],'OAS_FES');
-
-fprintf("\nSPODE:\nBestÎª:%d\nWorstÎª:%d\nMedianÎª:%d\nMeanÎª:%d\nStdÎª:%d\n",min(s(1,:)),max(s(1,:)),median(s(1,:)),mean(s(1,:)),std(s(1,:)));
-
-%±£´æOMLDEµÄBest,Worst,Median,Mean,Stdµ½excel
-%  save_data(k,D,s,str); 
-end
-%% ²âÊÔODE
-clear;
-clc;
-close all; 
-addpath(genpath(pwd));  %´ò¿ªÒ»¸ö²»ÔÚmatlab¹¤×÷Â·¾¶ÉÏµÄÎÄ¼þ
-runNumber=10; %ÔËÐÐ´ÎÊý
-D=30;         %Î¬Êý
-NP=100;       %NPÎªÖÖÈº¹æÄ£
-F=0.5;        %Í»±äÒò×Ó
-CR=0.9;       %½»²æ¸ÅÂÊ
-Max_FES = 10000 * D; % ×î´óº¯ÊýÆÀ¹ÀÊý
-gen_max = Max_FES/NP;  % ×î´óµü´úÊý 
-border=100;     %ÉÏÏÂ½ç¾ø¶ÔÖµ£¨Ò»°ãÎª¶Ô³ÆËÑË÷¿Õ¼ä£©
-fhd=str2func('cec17_func');
-str = "ODE";  % ÓÃÓÚ±£´æ¶Ô±ÈËã·¨±êÖ¾µÄ×Ö·û´®
-
-global fbias
-%×îÓÅÖµÆ«ÒÆÁ¿%
-fbias=[100,200,300,400,500,600,700,...
-       800,900,1000,1100,1200,1300,...
-       1400,1500,1600,1700,1800,1900,...
-       2000,2100,2200,2300,2400,2500,...
-       2600,2700,2800,2900,3000];
-   
-OBLDEMatrix=zeros(runNumber,Max_FES);
-
-Local_Algs_FES = zeros(1,Max_FES);
-s=zeros(1,runNumber);
-for k=29:29
-    func_num=k;
-    if k==2
-       continue;
-    end
-    fprintf("\n----------------------------------\n");
-    fprintf("¿ªÊ¼²âÊÔ%sµÄ%dÎ¬-F%dº¯Êý >>>>\n",str,D,k);
-    fprintf("----------------------------------\n");
-    
-for i=1:runNumber
-    fprintf("-----%sµÚ%d´ÎÔËÐÐ-----\n",str,i);
-    [Pb,~,FEs_fitness]=OBLDE(func_num,fhd,D,NP,F,CR,gen_max,Max_FES,border,func_num);
-    OBLDEMatrix(i,:)=FEs_fitness;
-    s(1,i)=Pb;
-     
-end
-Local_Algs_FES(1,:)= mean(OBLDEMatrix,1);
-
-if D==10
-    path='E:\MATLAB\project\LensOBLDE\Datas\10D\10\';
-elseif D==30
-    path='E:\MATLAB\project\LensOBLDE\Datas\30D\30\';
-elseif D==50
-    path='E:\MATLAB\project\LensOBLDE\Datas\50D\50\';
-end
-filename=strcat('Lens_OBL_Algs','_',int2str(D),'D_F',int2str(k),'.mat');
-load([path,filename]);
-Lens_OBL_Algs_FES(1,:)=Local_Algs_FES(1,:);
-save([path,filename],'Lens_OBL_Algs_FES');
-
-fprintf("\nODE:\nBestÎª:%d\nWorstÎª:%d\nMedianÎª:%d\nMeanÎª:%d\nStdÎª:%d\n",min(s(1,:)),max(s(1,:)),median(s(1,:)),mean(s(1,:)),std(s(1,:)));
-
-%±£´æOMLDEµÄBest,Worst,Median,Mean,Stdµ½excel
-%  save_data(k,D,s,str); 
 end
