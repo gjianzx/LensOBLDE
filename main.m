@@ -2,18 +2,17 @@ clear;
 clc;
 close all; 
 addpath(genpath(pwd));  
-runNumber=30; %运行次数
-D=10;         %维数
-NP=100;       %NP为种群规模
-F=0.5;        %突变因子
-CR=0.9;       %交叉概率
-gen_max=5000;%10000*D;  %最大进化代数 
-border=100;     %上下界绝对值（一般为对称搜索空间）
-% func_num=3;        %测试函数选择
-fhd=str2func('cec17_func');
+runNumber=30;                 % Run times
+D=10;                         % Dimension
+NP=100;                       % Population size
+F=0.5;                        % Mutation operator
+CR=0.9;                       % Crossover operator
+gen_max=5000;%10000*D;        % Maximum number of iterations 
+border=100;                   % Absolute value of upper and lower bounds
+fhd=str2func('cec17_func');   % CEC2017 benchmark suite
 
 global fbias
-%最优值偏移量%
+% Optimal value offset %
 fbias=[100,200,300,400,500,600,700,...
        800,900,1000,1100,1200,1300,...
        1400,1500,1600,1700,1800,1900,...
@@ -28,7 +27,7 @@ for k=16:19 %21
         continue;
     end
     fprintf("\n------------------------\n");
-    fprintf("开始调用F%d函数\n",k);
+    fprintf("Start testing the F%d function\n",k);
     fprintf("------------------------\n");
 s=zeros(7,runNumber);
 for i=1:runNumber
